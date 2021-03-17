@@ -8,11 +8,14 @@ authors = ["Tyler Slabinski <tslabinski@slabity.net>"]
 
 [dependencies]
 nix = "0.8.1"
-derive_more = "0.7.1"
-drm-sys = "0.0.9"
+derive_more = "0.99.11"
+
+[dependencies.drm-sys]
+version = "0.0.9"
+path = "./drm-sys"
 
 [dependencies.error-chain]
-version = "0.11.0"
+version = "0.12.4"
 default-features = false
 
 [features]
