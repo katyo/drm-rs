@@ -20,3 +20,8 @@ default-features = false
 
 [features]
 use_bindgen = ["drm-sys/use_bindgen"]
+
+[workspace]
+members = [
+  "./drm-sys"
+]
