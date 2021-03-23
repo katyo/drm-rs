@@ -46,9 +46,7 @@ impl control::ResourceHandle for Handle {
 
 impl std::fmt::Debug for Handle {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        f.debug_tuple("property::Handle")
-            .field(&self.0)
-            .finish()
+        f.debug_tuple("property::Handle").field(&self.0).finish()
     }
 }
 
@@ -59,7 +57,7 @@ pub struct Info {
     pub(crate) val_type: ValueType,
     pub(crate) mutable: bool,
     pub(crate) atomic: bool,
-    pub(crate) info: ffi::drm_mode_get_property
+    pub(crate) info: ffi::drm_mode_get_property,
 }
 
 impl Info {
@@ -132,11 +130,11 @@ impl ValueType {
             ValueType::Blob => Value::Blob(value),
             ValueType::Object => Value::Object(unsafe { tm(value as u32) }),
             ValueType::CRTC => Value::CRTC(unsafe { tm(value as u32) }),
-            ValueType::Connector => Value::Connector(unsafe { tm (value as u32) }),
-            ValueType::Encoder => Value::Encoder(unsafe { tm (value as u32) }),
-            ValueType::Framebuffer => Value::Framebuffer(unsafe { tm (value as u32) }),
-            ValueType::Plane => Value::Plane(unsafe { tm (value as u32) }),
-            ValueType::Property => Value::Property(unsafe { tm (value as u32) }),
+            ValueType::Connector => Value::Connector(unsafe { tm(value as u32) }),
+            ValueType::Encoder => Value::Encoder(unsafe { tm(value as u32) }),
+            ValueType::Framebuffer => Value::Framebuffer(unsafe { tm(value as u32) }),
+            ValueType::Plane => Value::Plane(unsafe { tm(value as u32) }),
+            ValueType::Property => Value::Property(unsafe { tm(value as u32) }),
         }
     }
 }
@@ -166,7 +164,13 @@ impl<'a> Into<RawValue> for Value<'a> {
 
         match self {
             Value::Unknown(x) => x,
-            Value::Boolean(x) => if x { 1 } else { 0 },
+            Value::Boolean(x) => {
+                if x {
+                    1
+                } else {
+                    0
+                }
+            }
             Value::UnsignedRange(x) => x,
             Value::SignedRange(x) => x as u64,
             Value::Enum(val) => val.value(),
@@ -239,4 +243,3 @@ impl std::fmt::Debug for EnumValues {
             .finish()
     }
 }
-

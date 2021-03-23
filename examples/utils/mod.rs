@@ -1,8 +1,8 @@
-pub use drm::Device;
 pub use drm::control::Device as ControlDevice;
+pub use drm::Device;
 
-pub use drm::control::ResourceHandle;
 pub use drm::control::property::*;
+pub use drm::control::ResourceHandle;
 
 #[derive(Debug)]
 /// A simple wrapper for a device node.
@@ -40,11 +40,7 @@ impl Card {
 
 pub mod capabilities {
     use drm::ClientCapability as CC;
-    pub const CLIENT_CAP_ENUMS: &[CC] = &[
-        CC::Stereo3D,
-        CC::UniversalPlanes,
-        CC::Atomic
-    ];
+    pub const CLIENT_CAP_ENUMS: &[CC] = &[CC::Stereo3D, CC::UniversalPlanes, CC::Atomic];
 
     use drm::DriverCapability as DC;
     pub const DRIVER_CAP_ENUMS: &[DC] = &[
@@ -73,4 +69,3 @@ pub mod images {
         image::open(path).unwrap().to_rgba()
     }
 }
-

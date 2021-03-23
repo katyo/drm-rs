@@ -38,9 +38,7 @@ impl control::ResourceHandle for Handle {
 
 impl std::fmt::Debug for Handle {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        f.debug_tuple("connector::Handle")
-            .field(&self.0)
-            .finish()
+        f.debug_tuple("connector::Handle").field(&self.0).finish()
     }
 }
 
@@ -91,7 +89,7 @@ impl Info {
         &self.encoders
     }
 
-    pub fn modes(&self) ->  &[control::Mode] {
+    pub fn modes(&self) -> &[control::Mode] {
         &self.modes
     }
 

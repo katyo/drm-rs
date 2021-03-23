@@ -57,9 +57,7 @@ impl From<::control::RawResourceHandle> for Handle {
 
 impl std::fmt::Debug for Handle {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        f.debug_tuple("buffer::Handle")
-            .field(&self.0)
-            .finish()
+        f.debug_tuple("buffer::Handle").field(&self.0).finish()
     }
 }
 
@@ -82,9 +80,7 @@ impl Into<u32> for Name {
 
 impl std::fmt::Debug for Name {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        f.debug_tuple("buffer::Name")
-            .field(&self.0)
-            .finish()
+        f.debug_tuple("buffer::Name").field(&self.0).finish()
     }
 }
 

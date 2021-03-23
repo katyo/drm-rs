@@ -23,7 +23,7 @@ fn run_repl(card: &Card) {
         images::load_image("1.png"),
         images::load_image("2.png"),
         images::load_image("3.png"),
-        images::load_image("4.png")
+        images::load_image("4.png"),
     ];
 
     for image in &images {
@@ -66,18 +66,17 @@ fn run_repl(card: &Card) {
                     let args: Vec<_> = line.split_whitespace().collect();
                     match &args[..] {
                         ["Quit"] => break,
-                        args => println!("{:?}", args)
+                        args => println!("{:?}", args),
                     }
                 }
-            },
+            }
             // Destroying a framebuffer
             ["DestroyFramebuffer", handle] => {
                 let handle: u32 = str::parse(handle).unwrap();
-                let handle: drm::control::framebuffer::Handle = unsafe {
-                    std::mem::transmute(handle)
-                };
+                let handle: drm::control::framebuffer::Handle =
+                    unsafe { std::mem::transmute(handle) };
                 card.destroy_framebuffer(handle);
-            },
+            }
             // Print out all resources
             ["GetResources"] => {
                 let resources = card.resource_handles().unwrap();
@@ -87,48 +86,39 @@ fn run_repl(card: &Card) {
                 println!("\tFramebuffers: {:?}", resources.framebuffers());
                 let planes = card.plane_handles().unwrap();
                 println!("\tPlanes: {:?}", planes.planes());
-            },
+            }
             // Print out the values of a specific property
             ["GetProperty", handle] => {
                 let handle: u32 = str::parse(handle).unwrap();
-                let handle: drm::control::property::Handle = unsafe {
-                    std::mem::transmute(handle)
-                };
+                let handle: drm::control::property::Handle = unsafe { std::mem::transmute(handle) };
                 let property = card.get_property(handle).unwrap();
                 println!("\tName: {:?}", property.name());
                 println!("\tMutable: {:?}", property.mutable());
                 println!("\tAtomic: {:?}", property.atomic());
                 println!("\tValue: {:#?}", property.value_type());
-            },
+            }
             // Get the property-value pairs of a single resource
-            ["GetProperties", handle] => {
-                match HandleWithProperties::from_str(card, handle) {
-                    Ok(handle) => {
-                        let props = match handle {
-                            HandleWithProperties::Connector(handle) => {
-                                card.get_properties(handle).unwrap()
-                            },
-                            HandleWithProperties::CRTC(handle) => {
-                                card.get_properties(handle).unwrap()
-                            },
-                            HandleWithProperties::Plane(handle) => {
-                                card.get_properties(handle).unwrap()
-                            }
-                        };
-                        let (ids, vals) = props.as_props_and_values();
-                        for (id, val) in ids.iter().zip(vals.iter()) {
-                            println!("\tProperty: {:?}\tValue: {:?}", id, val);
+            ["GetProperties", handle] => match HandleWithProperties::from_str(card, handle) {
+                Ok(handle) => {
+                    let props = match handle {
+                        HandleWithProperties::Connector(handle) => {
+                            card.get_properties(handle).unwrap()
                         }
-                    },
-                    Err(_) => println!("Unknown handle or handle has no properties")
+                        HandleWithProperties::CRTC(handle) => card.get_properties(handle).unwrap(),
+                        HandleWithProperties::Plane(handle) => card.get_properties(handle).unwrap(),
+                    };
+                    let (ids, vals) = props.as_props_and_values();
+                    for (id, val) in ids.iter().zip(vals.iter()) {
+                        println!("\tProperty: {:?}\tValue: {:?}", id, val);
+                    }
                 }
+                Err(_) => println!("Unknown handle or handle has no properties"),
             },
             // Set a property's value on a resource
             ["SetProperty", handle, property, value] => {
                 let property: u32 = str::parse(property).unwrap();
-                let property: drm::control::property::Handle = unsafe {
-                    std::mem::transmute(property)
-                };
+                let property: drm::control::property::Handle =
+                    unsafe { std::mem::transmute(property) };
                 let value: u64 = str::parse(value).unwrap();
 
                 match HandleWithProperties::from_str(card, handle) {
@@ -136,30 +126,28 @@ fn run_repl(card: &Card) {
                         match handle {
                             HandleWithProperties::Connector(handle) => {
                                 println!("\t{:?}", card.set_property(handle, property, value));
-                            },
+                            }
                             HandleWithProperties::CRTC(handle) => {
                                 println!("\t{:?}", card.set_property(handle, property, value));
-                            },
+                            }
                             HandleWithProperties::Plane(handle) => {
                                 println!("\t{:?}", card.set_property(handle, property, value));
                             }
                         };
-                    },
-                    Err(_) => println!("Unknown handle or handle has no properties")
+                    }
+                    Err(_) => println!("Unknown handle or handle has no properties"),
                 };
-            },
-            ["GetModes", handle] => {
-                match HandleWithProperties::from_str(card, handle) {
-                    Ok(HandleWithProperties::Connector(handle)) => {
-                        let modes = card.get_modes(handle).unwrap();
-                        for mode in modes {
-                            println!("\tName:\t{:?}", mode.name());
-                            println!("\t\tSize:\t{:?}", mode.size());
-                            println!("\t\tRefresh:\t{:?}", mode.vrefresh());
-                        }
-                    },
-                    _ => println!("Unknown handle or handle is not a connector")
+            }
+            ["GetModes", handle] => match HandleWithProperties::from_str(card, handle) {
+                Ok(HandleWithProperties::Connector(handle)) => {
+                    let modes = card.get_modes(handle).unwrap();
+                    for mode in modes {
+                        println!("\tName:\t{:?}", mode.name());
+                        println!("\t\tSize:\t{:?}", mode.size());
+                        println!("\t\tRefresh:\t{:?}", mode.vrefresh());
+                    }
                 }
+                _ => println!("Unknown handle or handle is not a connector"),
             },
             ["help"] => {
                 println!("CreateAtomicSet");
@@ -171,10 +159,10 @@ fn run_repl(card: &Card) {
                 println!("GetModes <handle>");
             }
             ["quit"] => break,
-            [ ] => (),
+            [] => (),
             _ => {
                 println!("Unknown command");
-            },
+            }
         }
     }
 }
