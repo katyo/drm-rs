@@ -12,6 +12,7 @@ libc = { version = "*", default-features = false }
 [features]
 default = []
 use_bindgen = ["bindgen", "pkg-config"]
+update_bindings = ["use_bindgen"]
 
 [build-dependencies]
 bindgen = { version = "*", optional = true }
