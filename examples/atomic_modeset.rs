@@ -34,8 +34,10 @@ fn find_prop_id<T: ResourceHandle>(
 pub fn main() {
     let card = Card::open_global();
 
-    card.set_client_capability(drm::ClientCapability::UniversalPlanes, true);
-    card.set_client_capability(drm::ClientCapability::Atomic, true);
+    card.set_client_capability(drm::ClientCapability::UniversalPlanes, true)
+        .unwrap();
+    card.set_client_capability(drm::ClientCapability::Atomic, true)
+        .unwrap();
 
     // Load the information.
     let res = card
@@ -88,7 +90,7 @@ pub fn main() {
         let mut map = card
             .map_dumb_buffer(&mut db)
             .expect("Could not map dumbbuffer");
-        for mut b in map.as_mut() {
+        for b in map.as_mut() {
             *b = 128;
         }
     }

@@ -66,7 +66,7 @@ pub fn main() {
         let mut map = card
             .map_dumb_buffer(&mut db)
             .expect("Could not map dumbbuffer");
-        for mut b in map.as_mut() {
+        for b in map.as_mut() {
             *b = 128;
         }
     }

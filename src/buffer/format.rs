@@ -2,9 +2,10 @@
 
 use drm_ffi::fourcc::*;
 
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-#[allow(missing_docs)]
 /// Possible pixel formats of a buffer
+#[allow(missing_docs)]
+#[allow(clippy::upper_case_acronyms)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum PixelFormat {
     C8,
     R8,

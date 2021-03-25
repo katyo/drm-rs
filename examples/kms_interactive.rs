@@ -11,7 +11,7 @@ pub fn main() {
 
     // Enable all possible client capabilities
     for &cap in capabilities::CLIENT_CAP_ENUMS {
-        card.set_client_capability(cap, true);
+        card.set_client_capability(cap, true).unwrap();
     }
 
     run_repl(&card);
@@ -37,7 +37,7 @@ fn run_repl(card: &Card) {
         // Load the image into the buffer
         {
             let mut mapping = card.map_dumb_buffer(&mut db).unwrap();
-            let mut buffer = mapping.as_mut();
+            let buffer = mapping.as_mut();
             for (img_px, map_px) in image.pixels().zip(buffer.chunks_exact_mut(4)) {
                 // Assuming little endian, it's BGRA
                 map_px[0] = img_px[0]; // Blue
@@ -75,7 +75,7 @@ fn run_repl(card: &Card) {
                 let handle: u32 = str::parse(handle).unwrap();
                 let handle: drm::control::framebuffer::Handle =
                     unsafe { std::mem::transmute(handle) };
-                card.destroy_framebuffer(handle);
+                card.destroy_framebuffer(handle).unwrap();
             }
             // Print out all resources
             ["GetResources"] => {
