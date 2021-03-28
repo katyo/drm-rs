@@ -90,6 +90,35 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all --all-features
 
+  check-minimal:
+    if: ${{ !startsWith(github.ref, 'refs/heads/develop') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run: sudo apt-get install -y libdrm-dev
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          profile: minimal
+          default: true
+          override: true
+      - name: Cargo cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-rust_nightly-${{ hashFiles('**/Cargo.toml') }}
+      - name: Build cache
+        uses: actions/cache@v2
+        with:
+          path: target
+          key: ${{ runner.os }}-build-rust_nightly-check-minimal-${{ hashFiles('**/Cargo.toml') }}
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
+          args: --all --all-features -Z minimal-versions
+
   test:
     needs:
       - format
@@ -261,6 +290,7 @@ jobs:
       - format
       - doc
       - check
+      - check-minimal
       - test
     runs-on: ubuntu-latest
     steps:
